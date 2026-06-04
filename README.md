@@ -1,4 +1,5 @@
-#DevHub
+## DevHub
+
 
 I built this project as a way to learn fullstack development with React and Node.js. It began as a side project and has grown into a full community platform.
 
