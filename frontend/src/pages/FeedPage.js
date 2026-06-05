@@ -49,7 +49,7 @@ const FeedPage = () => {
     <Layout sidebar={sidebar}>
       {user && <CreatePost />}
 
-      {/* Feed type tabs */}
+      
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
         <button
           onClick={() => dispatch(setFeedType('feed'))}
@@ -65,10 +65,10 @@ const FeedPage = () => {
         </button>
       </div>
 
-      {/* Loading state */}
+      
       {loading && posts.length === 0 && <Spinner center />}
 
-      {/* Empty state */}
+      
       {!loading && posts.length === 0 && (
         <div className="empty">
           <div className="empty-icon">📭</div>
@@ -80,13 +80,13 @@ const FeedPage = () => {
         </div>
       )}
 
-      {/* Posts list */}
+      
       {posts.length > 0 && posts.map(post => {
         if (!post || !post._id) return null;
         return <PostCard key={post._id} post={post} />;
       })}
 
-      {/* Load more */}
+      
       {page < totalPages && (
         <div style={{ textAlign: 'center', paddingTop: '1rem' }}>
           <button

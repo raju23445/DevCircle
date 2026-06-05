@@ -10,7 +10,7 @@ const QuestionCard = ({ question }) => {
   const dispatch = useDispatch();
   const { user } = useSelector(s => s.auth);
 
-  // ✅ FIXED — uses optimistic update counts if available, falls back to array length
+ 
   const score = question._upvoteCount !== undefined
     ? question._upvoteCount - (question._downvoteCount || 0)
     : (question.upvotes?.length || 0) - (question.downvotes?.length || 0);
@@ -19,7 +19,7 @@ const QuestionCard = ({ question }) => {
   const isDownvoted = user && (question.downvotes?.includes(user._id));
   const hasAccepted = question.answers?.some(a => a.isAccepted);
 
-  // ✅ FIXED — passes userId so optimistic update works instantly
+  
   const handleUpvote = () => {
     if (!user) return;
     dispatch(voteQuestion({ id: question._id, type: 'up', userId: user._id }));
@@ -41,7 +41,7 @@ const QuestionCard = ({ question }) => {
       onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
     >
 
-      {/* Vote Column */}
+      
       <div style={{
         display: 'flex',
         flexDirection: 'column',
@@ -50,7 +50,7 @@ const QuestionCard = ({ question }) => {
         minWidth: '52px',
       }}>
 
-        {/* Upvote Button */}
+        
         <button
           onClick={handleUpvote}
           title={user ? 'Upvote' : 'Login to vote'}
@@ -88,7 +88,7 @@ const QuestionCard = ({ question }) => {
           ▲
         </button>
 
-        {/* Score — updates instantly now */}
+        
         <span style={{
           fontWeight: 800,
           fontSize: '1.1rem',
@@ -100,7 +100,7 @@ const QuestionCard = ({ question }) => {
           {score}
         </span>
 
-        {/* Downvote Button */}
+        
         <button
           onClick={handleDownvote}
           title={user ? 'Downvote' : 'Login to vote'}
@@ -140,10 +140,10 @@ const QuestionCard = ({ question }) => {
 
       </div>
 
-      {/* Content */}
+      
       <div style={{ flex: 1 }}>
 
-        {/* Title Row */}
+        
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.5rem' }}>
           {hasAccepted && (
             <span title="Has accepted answer" style={{
@@ -175,7 +175,7 @@ const QuestionCard = ({ question }) => {
           </Link>
         </div>
 
-        {/* Body Preview */}
+        
         <p style={{
           color: 'var(--muted)',
           fontSize: '0.875rem',
@@ -185,14 +185,14 @@ const QuestionCard = ({ question }) => {
           {question.body?.slice(0, 150)}{question.body?.length > 150 ? '...' : ''}
         </p>
 
-        {/* Tags */}
+        
         {question.tags?.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.75rem' }}>
             {question.tags.map(t => <Tag key={t} tag={t} />)}
           </div>
         )}
 
-        {/* Footer */}
+        
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -201,7 +201,7 @@ const QuestionCard = ({ question }) => {
           color: 'var(--muted)',
         }}>
 
-          {/* Answer count badge */}
+          
           <span style={{
             display: 'flex',
             alignItems: 'center',
@@ -215,12 +215,12 @@ const QuestionCard = ({ question }) => {
             💬 {question.answers?.length || 0} answers
           </span>
 
-          {/* Views */}
+          
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
             👁 {question.views || 0} views
           </span>
 
-          {/* Author */}
+          
           <div style={{
             marginLeft: 'auto',
             display: 'flex',

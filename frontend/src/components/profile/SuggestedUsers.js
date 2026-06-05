@@ -12,7 +12,7 @@ const SuggestedUsers = () => {
     if (!user) return;
     api.get('/users/suggested')
       .then(r => setUsers(r.data?.users || []))
-      .catch(() => setUsers([]));  // ✅ never crashes
+      .catch(() => setUsers([]));  
   }, [user]);
 
   if (!user || !users || users.length === 0) return null;

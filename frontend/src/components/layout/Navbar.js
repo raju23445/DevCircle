@@ -6,7 +6,7 @@ import Avatar from '../common/Avatar';
 import useTheme from '../../hooks/useTheme';
 
 const Navbar = () => {
-  const { theme, toggleTheme } = useTheme();         {/* ← ADDED */}
+  const { theme, toggleTheme } = useTheme();         
   const { user } = useSelector(s => s.auth);
   const { unreadCount: notifCount } = useSelector(s => s.notifications);
   const { unreadCount: msgCount } = useSelector(s => s.messages);
@@ -23,12 +23,12 @@ const Navbar = () => {
     }}>
       <div className="container" style={{ display:'flex', alignItems:'center', height:'60px', gap:'1rem' }}>
 
-        {/* Logo */}
+        
         <Link to="/" style={{ fontWeight:700, fontSize:'1.3rem', color:'var(--accent)', marginRight:'1rem', display:'flex', alignItems:'center', gap:'0.4rem' }}>
           <span style={{ fontSize:'1.5rem' }}>🔧</span> DevCircle
         </Link>
 
-        {/* Nav links */}
+        
         <div style={{ display:'flex', gap:'0.25rem', flex:1 }}>
           {[
             { to:'/', label:'Feed' },
@@ -44,11 +44,11 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Right side */}
+        
         {user ? (
           <div style={{ display:'flex', alignItems:'center', gap:'0.5rem' }}>
 
-            {/* ☀️ Theme Toggle Button */}
+            
             <button
               onClick={toggleTheme}
               title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
@@ -82,7 +82,7 @@ const Navbar = () => {
         ) : (
           <div style={{ display:'flex', gap:'0.5rem' }}>
 
-            {/* ☀️ Theme Toggle Button (logged out) */}
+            
             <button
               onClick={toggleTheme}
               title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}

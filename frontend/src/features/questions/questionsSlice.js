@@ -26,7 +26,6 @@ export const postAnswer = createAsyncThunk('questions/postAnswer', async ({ id, 
 });
 
 export const voteQuestion = createAsyncThunk('questions/vote', async ({ id, type }, { rejectWithValue, getState }) => {
-  // Optimistic update — get current user from state
   const userId = getState().auth.user?._id;
   try {
     const res = await api.post(`/questions/${id}/vote`, { type });
@@ -42,7 +41,6 @@ export const voteAnswer = createAsyncThunk('questions/voteAnswer', async ({ ques
   } catch (err) { return rejectWithValue(err.response?.data?.message); }
 });
 
-// Helper — apply vote logic to an item (question or answer)
 const applyVote = (item, type, userId) => {
   if (!item || !userId) return;
   const upvotes = item.upvotes || [];
@@ -72,7 +70,6 @@ const questionsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch list
       .addCase(fetchQuestions.pending, (state) => { state.loading = true; })
       .addCase(fetchQuestions.fulfilled, (state, action) => {
         state.loading = false;
@@ -86,12 +83,12 @@ const questionsSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Create
+      
       .addCase(createQuestion.fulfilled, (state, action) => {
         state.questions.unshift(action.payload);
       })
 
-      // Fetch single
+      
       .addCase(fetchQuestion.pending, (state) => { state.loading = true; })
       .addCase(fetchQuestion.fulfilled, (state, action) => {
         state.loading = false;
@@ -102,29 +99,28 @@ const questionsSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Post answer
+      
       .addCase(postAnswer.fulfilled, (state, action) => {
         if (state.current?._id === action.payload.id) {
           state.current.answers = [...(state.current.answers || []), action.payload.answer];
         }
       })
 
-      // Vote question — OPTIMISTIC update, no refresh needed
+      
       .addCase(voteQuestion.pending, (state, action) => {
         const { id, type, userId } = action.meta.arg;
-        // Update in questions list
+        
         const q = state.questions.find(q => q._id === id);
         if (q) applyVote(q, type, userId || '');
-        // Update in current detail view
+        
         if (state.current?._id === id) applyVote(state.current, type, userId || '');
       })
       .addCase(voteQuestion.fulfilled, (state, action) => {
-        // Server confirmed — sync exact counts from server response
+        
         const { id, upvotes, downvotes } = action.payload;
         const q = state.questions.find(q => q._id === id);
         if (q) {
-          // Keep array format consistent — store counts as fake arrays
-          // so score calculation still works
+          
           q._upvoteCount = upvotes;
           q._downvoteCount = downvotes;
         }
@@ -134,11 +130,11 @@ const questionsSlice = createSlice({
         }
       })
       .addCase(voteQuestion.rejected, (state, action) => {
-        // Rollback optimistic update on error — refetch
+        
         state.error = action.payload;
       })
 
-      // Vote answer — OPTIMISTIC update
+      
       .addCase(voteAnswer.pending, (state, action) => {
         const { answerId, type } = action.meta.arg;
         const userId = action.meta.arg.userId || '';

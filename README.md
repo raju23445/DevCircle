@@ -1,6 +1,5 @@
 ## DevHub
 
-
 I built this project as a way to learn fullstack development with React and Node.js. It began as a side project and has grown into a full community platform.
 
 ## Why I made this I got tired of switching between Twitter and Stack Overflow so I decided to make an app that combines both for developers.
@@ -61,9 +60,7 @@ devcircle/
 git clone https://github.com/yourusername/devcircle.git
 cd devcircle
 
-# Create backend env file
 cp backend/.env.example backend/.env
-# Edit backend/.env — set JWT_SECRET and OPENAI_API_KEY
 
 docker-compose up --build
 ```
@@ -79,16 +76,14 @@ docker-compose up --build
 **Prerequisites:** Node.js 18+, MongoDB running locally
 
 ```bash
-# 1. Backend
 cd backend
-cp .env.example .env        # fill in values
+cp .env.example .env        
 npm install
-npm run dev                 # starts on port 5000
+npm run dev                 
 
-# 2. Frontend (new terminal)
 cd frontend
 npm install --legacy-peer-deps
-npm start                   # starts on port 3000
+npm start                   
 ```
 
 ---
@@ -158,32 +153,26 @@ The API key **never** reaches the frontend.
 ## 📡 Sample API Calls
 
 ```bash
-# Register
 curl -X POST http://localhost:5000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"username":"alice","email":"alice@example.com","password":"secret123"}'
 
-# Login
 curl -X POST http://localhost:5000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"alice@example.com","password":"secret123"}'
 
-# Create post (authenticated)
 curl -X POST http://localhost:5000/api/posts \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{"text":"Hello DevCircle!","tags":["react","nodejs"]}'
 
-# Get feed
 curl http://localhost:5000/api/posts/feed?type=trending&page=1
 
-# Ask a question
 curl -X POST http://localhost:5000/api/questions \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{"title":"How do I use useEffect?","body":"I am confused about the dependency array...","tags":["react","hooks"]}'
 
-# AI improve text
 curl -X POST http://localhost:5000/api/ai/improve \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \

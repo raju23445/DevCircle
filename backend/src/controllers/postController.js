@@ -21,7 +21,7 @@ exports.getFeed = async (req, res, next) => {
 
     let query = {};
     if (type === 'trending') {
-      // trending: most likes in last 48h
+      
       const since = new Date(Date.now() - 48 * 60 * 60 * 1000);
       query = { createdAt: { $gte: since } };
     } else if (type === 'feed' && following.length > 0) {

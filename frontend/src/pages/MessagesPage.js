@@ -32,8 +32,7 @@ const MessagesPage = () => {
   useEffect(() => {
     if (userId) {
       dispatch(fetchMessages(userId));
-      // find other user from conversations
-      const conv = conversations.find(c => c._id === userId || c.user?._id === userId);
+       const conv = conversations.find(c => c._id === userId || c.user?._id === userId);
       if (conv?.user) setOtherUser(conv.user);
     }
   }, [userId, dispatch, conversations]);
@@ -59,8 +58,7 @@ const MessagesPage = () => {
   return (
     <Layout>
       <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '1rem', height: 'calc(100vh - 100px)' }}>
-        {/* Conversations list */}
-        <div className="card" style={{ overflow: 'auto', padding: '0' }}>
+         <div className="card" style={{ overflow: 'auto', padding: '0' }}>
           <div style={{ padding: '1rem', borderBottom: '1px solid var(--border)', fontWeight: 700 }}>Messages</div>
           {conversations.length === 0 && <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)' }}>No conversations yet</div>}
           {conversations.map(conv => (
@@ -81,7 +79,7 @@ const MessagesPage = () => {
           ))}
         </div>
 
-        {/* Chat area */}
+        
         {userId ? (
           <div className="card" style={{ display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
             <div style={{ padding: '1rem', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>

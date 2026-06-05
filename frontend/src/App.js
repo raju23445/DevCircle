@@ -40,7 +40,7 @@ function App() {
     });
     socket.on('newMessage', (msg) => {
       dispatch(addRealtimeMessage({ message: msg }));
-      dispatch(setUnreadCount(1)); // increment
+      dispatch(setUnreadCount(1)); 
     });
     return () => { socket.off('notification'); socket.off('newMessage'); };
   }, [user, dispatch]);

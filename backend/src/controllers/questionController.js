@@ -65,7 +65,7 @@ exports.acceptAnswer = async (req, res, next) => {
 
 exports.voteQuestion = async (req, res, next) => {
   try {
-    const { type } = req.body; // 'up' | 'down'
+    const { type } = req.body; 
     const question = await Question.findById(req.params.id);
     if (!question) return res.status(404).json({ success: false, message: 'Not found' });
     if (type === 'up') {

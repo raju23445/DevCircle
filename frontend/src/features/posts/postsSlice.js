@@ -5,7 +5,7 @@ export const fetchFeed = createAsyncThunk('posts/fetchFeed', async ({ page = 1, 
   try {
     const res = await api.get(`/posts/feed?page=${page}&type=${type}`);
     return { 
-      posts: res.data.posts || [],        // ✅ never undefined
+      posts: res.data.posts || [],        
       page: res.data.page || page,
       totalPages: res.data.totalPages || 1,
       total: res.data.total || 0,
@@ -38,7 +38,7 @@ export const repost = createAsyncThunk('posts/repost', async (postId, { rejectWi
   catch (err) { return rejectWithValue(err.response?.data?.message); }
 });
 
-// ✅ Safe initial state — everything has a default value
+
 const initialState = {
   posts: [],
   loading: false,
@@ -69,7 +69,7 @@ const postsSlice = createSlice({
       })
       .addCase(fetchFeed.fulfilled, (state, action) => {
         state.loading = false;
-        // ✅ Always use safe arrays — never undefined
+        
         const incoming = Array.isArray(action.payload.posts) ? action.payload.posts : [];
         if (action.payload.page === 1) {
           state.posts = incoming;
@@ -82,7 +82,7 @@ const postsSlice = createSlice({
       .addCase(fetchFeed.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        state.posts = [];   // ✅ reset to empty array on error
+        state.posts = [];   
       })
       .addCase(createPost.fulfilled, (state, action) => {
         if (action.payload) state.posts.unshift(action.payload);

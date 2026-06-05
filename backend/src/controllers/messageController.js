@@ -37,7 +37,7 @@ exports.getMessages = async (req, res, next) => {
       ]
     }).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit)
       .populate('sender receiver', 'username avatar');
-    // mark as read
+    
     await Message.updateMany(
       { sender: req.params.userId, receiver: req.user._id, read: false },
       { read: true }
