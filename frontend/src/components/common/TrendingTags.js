@@ -7,19 +7,32 @@ const TrendingTags = () => {
   const nav = useNavigate();
 
   useEffect(() => {
-    api.get('/questions/tags/trending').then(r => setTags(r.data.tags || [])).catch(() => {});
+    api.get('/questions/tags/trending')
+      .then(r => setTags(r.data?.tags || []))
+      .catch(() => setTags([]));  // ✅ never crashes
   }, []);
 
-  if (!tags.length) return null;
+  if (!tags || tags.length === 0) return null;
 
   return (
     <div className="card">
-      <h3 style={{ fontWeight:700, marginBottom:'1rem', fontSize:'0.95rem' }}>🔥 Trending Tags</h3>
+      <h3 style={{ fontWeight: 700, marginBottom: '1rem', fontSize: '0.95rem' }}>
+        🔥 Trending Tags
+      </h3>
       {tags.slice(0, 10).map(t => (
-        <div key={t._id} onClick={() => nav(`/questions?tag=${t._id}`)}
-          style={{ display:'flex', justifyContent:'space-between', padding:'0.4rem 0', cursor:'pointer', borderBottom:'1px solid var(--border)' }}>
+        <div
+          key={t._id}
+          onClick={() => nav(`/questions?tag=${t._id}`)}
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            padding: '0.4rem 0',
+            cursor: 'pointer',
+            borderBottom: '1px solid var(--border)'
+          }}
+        >
           <span className="tag">#{t._id}</span>
-          <span style={{ color:'var(--muted)', fontSize:'0.8rem' }}>{t.count}</span>
+          <span style={{ color: 'var(--muted)', fontSize: '0.8rem' }}>{t.count}</span>
         </div>
       ))}
     </div>
