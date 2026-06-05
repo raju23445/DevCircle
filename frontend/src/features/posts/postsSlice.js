@@ -4,7 +4,12 @@ import api from '../../utils/api';
 export const fetchFeed = createAsyncThunk('posts/fetchFeed', async ({ page = 1, type = 'feed' } = {}, { rejectWithValue }) => {
   try {
     const res = await api.get(`/posts/feed?page=${page}&type=${type}`);
-    return { ...res.data, page };
+    return { 
+      posts: res.data.posts || [],        // ✅ never undefined
+      page: res.data.page || page,
+      totalPages: res.data.totalPages || 1,
+      total: res.data.total || 0,
+    };
   } catch (err) { return rejectWithValue(err.response?.data?.message); }
 });
 
@@ -33,35 +38,73 @@ export const repost = createAsyncThunk('posts/repost', async (postId, { rejectWi
   catch (err) { return rejectWithValue(err.response?.data?.message); }
 });
 
+// ✅ Safe initial state — everything has a default value
+const initialState = {
+  posts: [],
+  loading: false,
+  error: null,
+  page: 1,
+  totalPages: 1,
+  feedType: 'feed',
+};
+
 const postsSlice = createSlice({
   name: 'posts',
-  initialState: { posts: [], loading: false, error: null, page: 1, totalPages: 1, feedType: 'feed' },
+  initialState,
   reducers: {
-    setFeedType: (state, action) => { state.feedType = action.payload; state.posts = []; state.page = 1; },
-    addRealtimePost: (state, action) => { state.posts.unshift(action.payload); },
+    setFeedType: (state, action) => {
+      state.feedType = action.payload;
+      state.posts = [];
+      state.page = 1;
+    },
+    addRealtimePost: (state, action) => {
+      if (action.payload) state.posts.unshift(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchFeed.pending, (state) => { state.loading = true; })
+      .addCase(fetchFeed.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(fetchFeed.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload.page === 1) state.posts = action.payload.posts;
-        else state.posts = [...state.posts, ...action.payload.posts];
-        state.page = action.payload.page;
-        state.totalPages = action.payload.totalPages;
+        // ✅ Always use safe arrays — never undefined
+        const incoming = Array.isArray(action.payload.posts) ? action.payload.posts : [];
+        if (action.payload.page === 1) {
+          state.posts = incoming;
+        } else {
+          state.posts = [...state.posts, ...incoming];
+        }
+        state.page = action.payload.page || 1;
+        state.totalPages = action.payload.totalPages || 1;
       })
-      .addCase(fetchFeed.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
-      .addCase(createPost.fulfilled, (state, action) => { state.posts.unshift(action.payload); })
+      .addCase(fetchFeed.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.posts = [];   // ✅ reset to empty array on error
+      })
+      .addCase(createPost.fulfilled, (state, action) => {
+        if (action.payload) state.posts.unshift(action.payload);
+      })
       .addCase(likePost.fulfilled, (state, action) => {
         const p = state.posts.find(p => p._id === action.payload.postId);
-        if (p) p.likes = action.payload.liked ? [...(p.likes || []), 'me'] : (p.likes || []).slice(0, -1);
+        if (p) {
+          p.likes = action.payload.liked
+            ? [...(p.likes || []), 'me']
+            : (p.likes || []).slice(0, -1);
+        }
       })
-      .addCase(deletePost.fulfilled, (state, action) => { state.posts = state.posts.filter(p => p._id !== action.payload); })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.posts = state.posts.filter(p => p._id !== action.payload);
+      })
       .addCase(commentPost.fulfilled, (state, action) => {
         const p = state.posts.find(p => p._id === action.payload.postId);
         if (p) p.comments = [...(p.comments || []), action.payload.comment];
       })
-      .addCase(repost.fulfilled, (state, action) => { state.posts.unshift(action.payload); });
+      .addCase(repost.fulfilled, (state, action) => {
+        if (action.payload) state.posts.unshift(action.payload);
+      });
   },
 });
 
