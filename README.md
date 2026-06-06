@@ -54,25 +54,6 @@ devcircle/
 
 ## 🚀 Quick Start
 
-### Option A — Docker Compose (recommended)
-
-```bash
-git clone https://github.com/yourusername/devcircle.git
-cd devcircle
-
-cp backend/.env.example backend/.env
-
-docker-compose up --build
-```
-
-- Frontend: http://localhost:3000  
-- Backend API: http://localhost:5000/api  
-- Swagger Docs: http://localhost:5000/api/docs  
-
----
-
-### Option B — Local Development
-
 **Prerequisites:** Node.js 18+, MongoDB running locally
 
 ```bash
@@ -82,27 +63,9 @@ npm install
 npm run dev                 
 
 cd frontend
-npm install --legacy-peer-deps
+npm install s
 npm start                   
 ```
-
----
-
-## ⚙ Environment Variables
-
-### `backend/.env`
-
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/devcircle
-JWT_SECRET=your_super_secret_key_here
-JWT_EXPIRE=7d
-OPENAI_API_KEY=sk-...          # Required for AI features
-CLIENT_URL=http://localhost:3000
-NODE_ENV=development
-```
-
----
 
 ## ✨ Features
 
